@@ -37,7 +37,7 @@ class Actor(nn.Module):
         x = F.relu(self.fc2(x))
         return  torch.tanh(self.fc3(x))
 
-    def hidden_init(layer):
+    def hidden_init(self, layer):
         """Set bounds for the initial values of layer weights"""
         fan_in = layer.weight.data.size()[0]
         lim = 1. / np.sqrt(fan_in)
@@ -77,7 +77,7 @@ class Critic(nn.Module):
         x = F.relu(self.fc2(x))
         return self.fc3(x)
     
-    def hidden_init(layer):
+    def hidden_init(self, layer):
         """Set bounds for the initial values of layer weights"""
         fan_in = layer.weight.data.size()[0]
         lim = 1. / np.sqrt(fan_in)
