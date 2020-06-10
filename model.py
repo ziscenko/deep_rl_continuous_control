@@ -4,11 +4,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-def hidden_init(layer):
-    fan_in = layer.weight.data.size()[0]
-    lim = 1. / np.sqrt(fan_in)
-    return (-lim, lim)
-
 class Actor(nn.Module):
     """Actor (Policy) Model."""
 
@@ -31,8 +26,9 @@ class Actor(nn.Module):
         self.reset_parameters()
 
     def reset_parameters(self):
-        self.fc1.weight.data.uniform_(*hidden_init(self.fc1))
-        self.fc2.weight.data.uniform_(*hidden_init(self.fc2))
+         """Initialise network parameters"""
+        self.fc1.weight.data.uniform_(*self.hidden_init(self.fc1))
+        self.fc2.weight.data.uniform_(*self.hidden_init(self.fc2))
         self.fc3.weight.data.uniform_(-3e-3, 3e-3)
 
     def forward(self, state):
@@ -41,6 +37,11 @@ class Actor(nn.Module):
         x = F.relu(self.fc2(x))
         return  torch.tanh(self.fc3(x))
 
+    def hidden_init(layer):
+        """Set bounds for the initial values of layer weights"""
+        fan_in = layer.weight.data.size()[0]
+        lim = 1. / np.sqrt(fan_in)
+        return (-lim, lim)
 
 class Critic(nn.Module):
     """Critic (Value) Model."""
@@ -64,8 +65,9 @@ class Critic(nn.Module):
         self.reset_parameters()
 
     def reset_parameters(self):
-        self.fcs1.weight.data.uniform_(*hidden_init(self.fcs1))
-        self.fc2.weight.data.uniform_(*hidden_init(self.fc2))
+         """Initialise network parameters"""
+        self.fcs1.weight.data.uniform_(*self.hidden_init(self.fcs1))
+        self.fc2.weight.data.uniform_(*self.hidden_init(self.fc2))
         self.fc3.weight.data.uniform_(-3e-3, 3e-3)
 
     def forward(self, state, action):
@@ -74,3 +76,9 @@ class Critic(nn.Module):
         x = torch.cat((xs, action), dim=1)
         x = F.relu(self.fc2(x))
         return self.fc3(x)
+    
+    def hidden_init(layer):
+        """Set bounds for the initial values of layer weights"""
+        fan_in = layer.weight.data.size()[0]
+        lim = 1. / np.sqrt(fan_in)
+        return (-lim, lim)

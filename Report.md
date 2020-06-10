@@ -15,7 +15,7 @@ The problem is considered solved when the 20 agents achieve an average score of 
 - This yields an **average score** for each episode (where the average is over all 20 agents).
 
 ### Methods
-This solution uses the [Deep Deterministic Policy Gradient (DDPG)](https://arxiv.org/abs/1509.02971) Actor-Critic algorithm for continuous control problems with a simple (unweighted) relay buffer. This method uses off-policy data and the Bellman equation to learn the Q-function, and simultaneously uses the Q-function to learn the policy. 
+This solution uses the [Deep Deterministic Policy Gradient (DDPG)](https://arxiv.org/abs/1509.02971) Actor-Critic algorithm for continuous control problems with a simple (unweighted) replay buffer. This method uses off-policy data and the Bellman equation to learn the Q-function, and simultaneously uses the Q-function to learn the policy. 
 
 #### Actor network architecture
 The input into the network is a state vector of length 33. There are 4 output nodes with values between (-1, 1), corresponding to the each action dimension. The network has three fully connected layers and a batch normalisation layer after the first connected layer to stabilise learning. 
@@ -55,7 +55,7 @@ The solution, as implemented and saved in the accompanying `checkpoint_actor.pth
 |LR_CRITIC | 1e-3                |learning rate of the critic |
 |WEIGHT_DECAY | 0 | L2 weight decay|
 |LEARNING_FREQ | 20       | how often to update the network|
-| N_UPDATES| 10| how many times to sample the relay buffer in each learning step |
+| N_UPDATES| 10| how many times to sample the replay buffer in each learning step |
 |EPSILON | 1.0         | $\epsilon$ noise parameter|
 |EPSILON_DECAY|   1e-6         | decay in $\epsilon$ per step|
 |eps_decay|0.99          | the minimum value of $\epsilon$ |
@@ -75,7 +75,7 @@ The figure below illustrates the convergence to the solution:
 
 Futher options to explore include:
 
-1. Adding the [prioritised experience relay](https://ieeexplore.ieee.org/document/8122622) to the DDPG implementation. 
+1. Adding the [prioritised experience replay](https://ieeexplore.ieee.org/document/8122622) to the DDPG implementation. 
 
 2. Carry out more systematic hyperparameter tuning. 
 

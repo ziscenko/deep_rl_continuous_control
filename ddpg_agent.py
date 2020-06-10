@@ -24,7 +24,7 @@ N_UPDATES   = 10    # how much to learn
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-class Agent():
+class Agent(object):
     """Interacts with and learns from the environment."""
 
     def __init__(self, state_size, action_size, random_seed):
@@ -37,7 +37,7 @@ class Agent():
         """
         self.state_size = state_size
         self.action_size = action_size
-        self.seed = random.seed(random_seed)
+        self.seed = random_seed
         self.epsilon = EPSILON
 
         # Actor Network (w/ Target Network)
@@ -90,6 +90,7 @@ class Agent():
         return action
 
     def reset(self):
+        """Reset the agent's noise process"""
         self.noise.reset()
 
     def learn(self, experiences, gamma):
@@ -154,7 +155,7 @@ class Agent():
             target_param.data.copy_(tau*local_param.data + (1.0-tau)*target_param.data)
 
 
-class OUNoise:
+class OUNoise(object):
     """Ornstein-Uhlenbeck process."""
 
     def __init__(self, size, seed, mu=0., theta=0.15, sigma=0.2, dt = 0.01):
@@ -163,7 +164,8 @@ class OUNoise:
         self.theta = theta
         self.sigma = sigma
         self.dt = dt
-        self.seed = random.seed(seed)
+        random.seed(seed)
+        self.seed = seed
         self.reset()
 
     def reset(self):
@@ -177,7 +179,7 @@ class OUNoise:
         self.state = x + dx
         return self.state
 
-class ReplayBuffer:
+class ReplayBuffer(object):
     """Fixed-size buffer to store experience tuples."""
 
     def __init__(self, action_size, buffer_size, batch_size, seed):
@@ -191,7 +193,8 @@ class ReplayBuffer:
         self.memory = deque(maxlen=buffer_size)  # internal memory (deque)
         self.batch_size = batch_size
         self.experience = namedtuple("Experience", field_names=["state", "action", "reward", "next_state", "done"])
-        self.seed = random.seed(seed)
+        random.seed(seed)
+        self.seed = seed
 
     def add(self, state, action, reward, next_state, done):
         """Add a new experience to memory."""
